@@ -30,9 +30,9 @@ print('b')
 # capture frames from the camera
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
     print('c')
-    if first:
-        motors.enable()
-        motors.setSpeeds(MAX_SPEED, MAX_SPEED)
+#    if first:
+#        motors.enable()
+#        motors.setSpeeds(MAX_SPEED, MAX_SPEED)
     # grab the raw NumPy array representing the image, then initialize the timestamp
     # and occupied/unoccupied text
     print('d')
