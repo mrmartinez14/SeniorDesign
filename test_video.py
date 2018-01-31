@@ -10,7 +10,7 @@ camera = PiCamera()
 camera.resolution = (640, 480)
 camera.framerate = 32
 rawCapture = PiRGBArray(camera, size=(640, 480))
-state = 'h'
+state = 'c'
 first = True
 
 # Define range of color in HSV
@@ -50,14 +50,8 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 
     res = cv2.bitwise_and(image, image, mask=mask)
 
-    if state == 'h':
-        if 1 in res[:320,:]:
+    if state == 'c':
+        if [255,255,255] in res[:320,:]:
             print("y")
 
     rawCapture.truncate(0)
-
-    #if k == 27:
-        #break
-
-cv2.destroyAllWindows()
-
