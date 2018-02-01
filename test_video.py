@@ -48,6 +48,8 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     if state == 'f':
         mask = cv2.inRange(hsv, lower_red, upper_red)
 
+    mask = cv2.erode(mask, None, iterations=2)
+    mask = cv2.dilate(mask, None, iterations=2)
     res = cv2.bitwise_and(image, image, mask=mask)
 
     if state == 'c':
