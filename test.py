@@ -3,16 +3,17 @@ from picamera import PiCamera
 import cv2
 import numpy as np
 import time
-from dual_mc33926_rpi import motors, MAX_SPEED
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
 camera.resolution = (640, 480)
 camera.framerate = 32
 rawCapture = PiRGBArray(camera, size=(640, 480))
-state = 'h'
+state = 'c'
 first = True
-print('a')
+xCoord = 0
+yCoord = 0
+
 # Define range of color in HSV
 lower_red = np.array([160,30,30])
 upper_red = np.array([185,255,255])
@@ -26,21 +27,17 @@ upper_green = np.array([90,255,255])
 
 # allow the camera to warmup
 time.sleep(0.1)
-print('b')
+
 # capture frames from the camera
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-    print('c')
-#    if first:
-#        motors.enable()
-#        motors.setSpeeds(MAX_SPEED, MAX_SPEED)
     # grab the raw NumPy array representing the image, then initialize the timestamp
     # and occupied/unoccupied text
-    print('d')
     image = frame.array
 
     # Convert BGR to HSV
-    hsv = image #cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    print('e')
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+    # Get the mask for the current state
     if state == 'h':
         mask = cv2.inRange(hsv, lower_green, upper_green)
     if state == 'c':
@@ -50,16 +47,14 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     if state == 'f':
         mask = cv2.inRange(hsv, lower_red, upper_red)
 
-    res = cv2.bitwise_and(image, image, mask=mask)
+    cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]
 
-    if state == 'h':
-        if 1 in res[:320,:]:
-            print("y")
-
+    if len(cnts) > 0:
+        c = max(cnts, key=cv2.contourArea)
+        for i in c.tolist():
+            xCoord = xCoord + i[0][0]
+            yCoord = yCoord + i[0][1]
+        print(xCoord/len(c), yCoord/len(c))
+    xCoord = 0
+    yCoord = 0
     rawCapture.truncate(0)
-
-    #if k == 27:
-        #break
-
-cv2.destroyAllWindows()
-
