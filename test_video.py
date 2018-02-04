@@ -3,7 +3,7 @@ from picamera import PiCamera
 import cv2
 import numpy as np
 import time
-#from dual_mc33926_rpi import motors, MAX_SPEED
+from dual_mc33926_rpi import motors, MAX_SPEED
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
@@ -31,10 +31,10 @@ time.sleep(0.1)
 
 # capture frames from the camera
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-    #if first:
-    #    motors.enable()
-    #    motors.setSpeeds(MAX_SPEED, MAX_SPEED)
-    #    first = False
+    if first:
+        motors.enable()
+        motors.setSpeeds(MAX_SPEED, MAX_SPEED)
+        first = False
     # grab the raw NumPy array representing the image, then initialize the timestamp
     # and occupied/unoccupied text
     image = frame.array
