@@ -17,6 +17,8 @@ xCoord = 0
 yCoord = 0
 start_button = 21
 prox_sensor = 26
+count = 0
+low = True
 # Define range of color in HSV
 lower_red = np.array([160,30,30])
 upper_red = np.array([185,255,255])
@@ -35,6 +37,10 @@ time.sleep(0.1)
 wpi.wiringPiSetupGpio()
 wpi.pinMode(start_button, wpi.INPUT)
 wpi.pinMode(prox_sensor, wpi.INPUT)
+
+# Wait for start button
+while wpi.digitalRead(start_button) == 0:
+    print('wait to start')
 
 # capture frames from the camera
 try:
@@ -68,6 +74,17 @@ try:
                 xCoord = xCoord + i[0][0]
                 yCoord = yCoord + i[0][1]
             print(xCoord/len(c), yCoord/len(c))
+        if wpi.digitalRead(prox_sensor) == 1 and low == True:
+            if state == 'h':
+                state = 'c'
+            elif state == 'c':
+                if count == 0:
+                    count = 1
+                elif count == 1:
+                    count = 2
+                    state = 'b'
+                elif count == 2:
+  
 
         xCoord = 0
         yCoord = 0
