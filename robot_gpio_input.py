@@ -72,8 +72,14 @@ try:
             c = max(cnts, key=cv2.contourArea)
             for i in c.tolist():
                 xCoord = xCoord + i[0][0]
-                yCoord = yCoord + i[0][1]
-            print(xCoord/len(c), yCoord/len(c))
+            xCoord = xCoord/len(c)
+            print(xCoord)
+            if(xCoord > 320):
+                motors.setSpeeds(240,240)
+            if(xCoord < 320) and (xCoord > 120):
+                motors.setSpeeds(0,0)
+            else:
+                motors.setSpeeds(-240,-240)
         if wpi.digitalRead(prox_sensor) == 0 and low == True:
             if state == 'h':
                 state = 'c'
