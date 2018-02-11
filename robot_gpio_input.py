@@ -14,11 +14,11 @@ rawCapture = PiRGBArray(camera, size=(640, 480))
 state = 'c'
 first = True
 xCoord = 0
-yCoord = 0
 start_button = 21
 prox_sensor = 26
 count = 0
-low = True
+reset = True
+
 # Define range of color in HSV
 lower_red = np.array([160,30,30])
 upper_red = np.array([185,255,255])
@@ -47,7 +47,8 @@ try:
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
         if first:
             motors.enable()
-            motors.setSpeeds(MAX_SPEED, MAX_SPEED)
+            #motors.setSpeeds(MAX_SPEED, MAX_SPEED)
+            motors.setSpeeds(0,0)
             first = False
         # grab the raw NumPy array representing the image, then initialize the timestamp
         # and occupied/unoccupied text
@@ -80,20 +81,31 @@ try:
                 motors.setSpeeds(0,0)
             else:
                 motors.setSpeeds(-240,-240)
-        if wpi.digitalRead(prox_sensor) == 0 and low == True:
+        if wpi.digitalRead(prox_sensor) == 0 and reset == True:
             if state == 'h':
                 state = 'c'
+                reset = False
             elif state == 'c':
                 if count == 0:
                     count = 1
+                    reset = False
                 elif count == 1:
                     count = 2
                     state = 'b'
+                    reset = false
                 elif count == 2:
-  
+                    count = 3
+                    reset = False
+                elif count == 3:
+                    state = 'f'
+                    reset = False
+        elif wpi.digitalRead(prox_sensor) == 0 and reset = False:
+            #do motor stuff to turn
+        elif wpi.digitalRead(prox_sensor) == 1 and reset = False:
+            #do motor stuff to go straight
+            reset = True
 
         xCoord = 0
-        yCoord = 0
         rawCapture.truncate(0)
 
 except KeyboardInterrupt:
