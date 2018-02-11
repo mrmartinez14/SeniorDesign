@@ -7,3 +7,7 @@ run $: sudo apt-get install libopencv-dev python-opencv python-picamera
 
 # Motor Library
 See instructions at this link: https://github.com/pololu/dual-mc33926-motor-driver-rpi
+
+# Inputs
+Prox sensor is active low on pin 26
+Button is active high on pin 21

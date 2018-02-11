@@ -74,7 +74,7 @@ try:
                 xCoord = xCoord + i[0][0]
                 yCoord = yCoord + i[0][1]
             print(xCoord/len(c), yCoord/len(c))
-        if wpi.digitalRead(prox_sensor) == 1 and low == True:
+        if wpi.digitalRead(prox_sensor) == 0 and low == True:
             if state == 'h':
                 state = 'c'
             elif state == 'c':
