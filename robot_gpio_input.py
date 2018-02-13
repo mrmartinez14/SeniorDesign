@@ -39,8 +39,8 @@ wpi.pinMode(start_button, wpi.INPUT)
 wpi.pinMode(prox_sensor, wpi.INPUT)
 
 # Wait for start button
-while wpi.digitalRead(start_button) == 0:
-    print('wait to start')
+#while wpi.digitalRead(start_button) == 0:
+#    print('wait to start')
 
 # capture frames from the camera
 try:
@@ -76,34 +76,36 @@ try:
             xCoord = xCoord/len(c)
             print(xCoord)
             if(xCoord > 320):
-                motors.setSpeeds(240,240)
-            if(xCoord < 320) and (xCoord > 120):
+                motors.setSpeeds(-350,-350)
+                print("up")
+            elif(xCoord < 320) and (xCoord > 120):
                 motors.setSpeeds(0,0)
             else:
-                motors.setSpeeds(-240,-240)
-        if wpi.digitalRead(prox_sensor) == 0 and reset == True:
-            if state == 'h':
-                state = 'c'
-                reset = False
-            elif state == 'c':
-                if count == 0:
-                    count = 1
-                    reset = False
-                elif count == 1:
-                    count = 2
-                    state = 'b'
-                    reset = false
-                elif count == 2:
-                    count = 3
-                    reset = False
-                elif count == 3:
-                    state = 'f'
-                    reset = False
-        elif wpi.digitalRead(prox_sensor) == 0 and reset = False:
+                motors.setSpeeds(350,350)
+                print("down")
+ #       if wpi.digitalRead(prox_sensor) == 0 and reset == True:
+ #           if state == 'h':
+ #               state = 'c'
+ #               reset = False
+ #           elif state == 'c':
+ #               if count == 0:
+ #                   count = 1
+ #                   reset = False
+ #               elif count == 1:
+ #                   count = 2
+ #                   state = 'b'
+ #                   reset = false
+ #               elif count == 2:
+ #                   count = 3
+ #                   reset = False
+ #               elif count == 3:
+ #                   state = 'f'
+ #                   reset = False
+ #       elif wpi.digitalRead(prox_sensor) == 0 and reset = False:
             #do motor stuff to turn
-        elif wpi.digitalRead(prox_sensor) == 1 and reset = False:
+ #       elif wpi.digitalRead(prox_sensor) == 1 and reset = False:
             #do motor stuff to go straight
-            reset = True
+#            reset = True
 
         xCoord = 0
         rawCapture.truncate(0)
