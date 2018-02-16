@@ -74,15 +74,15 @@ try:
             for i in c.tolist():
                 xCoord = xCoord + i[0][0]
             xCoord = xCoord/len(c)
-            print(xCoord)
-            if(xCoord > 320):
+            #left
+            if(xCoord > 440):
                 motors.setSpeeds(-350,-350)
-                print("up")
-            elif(xCoord < 320) and (xCoord > 120):
+            #in front
+            elif(xCoord < 440) and (xCoord > 240):
                 motors.setSpeeds(0,0)
+            #right
             else:
                 motors.setSpeeds(350,350)
-                print("down")
  #       if wpi.digitalRead(prox_sensor) == 0 and reset == True:
  #           if state == 'h':
  #               state = 'c'
