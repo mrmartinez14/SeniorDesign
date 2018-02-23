@@ -67,6 +67,9 @@ try:
         if state == 'f':
             mask = cv2.inRange(hsv, lower_red, upper_red)
 
+	mask = cv2.erode(mask, None, iterations=2)
+	mask = cv2.dilate(mask, None, iterations=2)
+
         cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]
 
         if len(cnts) > 0:
@@ -74,15 +77,26 @@ try:
             for i in c.tolist():
                 xCoord = xCoord + i[0][0]
             xCoord = xCoord/len(c)
+#            print(xCoord)
             #left
-            if(xCoord > 440):
-                motors.setSpeeds(-350,-350)
+            if(xCoord > 424):
+                motors.setSpeeds(-310,300)
+                print('r')
             #in front
-            elif(xCoord < 440) and (xCoord > 240):
-                motors.setSpeeds(0,0)
-            #right
+            elif(xCoord < 424) and (xCoord > 212):
+                motors.motor2.setSpeed(300)
+#                time.sleep(0.01)
+                motors.motor1.setSpeed(-300)
+                print('s')
+#            elif(xCoord <400) and (xCoord > 250):
             else:
-                motors.setSpeeds(350,350)
+                motors.setSpeeds(-290,300)
+                print('l')
+            #right
+#            else:
+#        else:
+#            motors.setSpeeds(-250,250)
+#                motors.setSpeeds(-350,250)
  #       if wpi.digitalRead(prox_sensor) == 0 and reset == True:
  #           if state == 'h':
  #               state = 'c'
