@@ -58,15 +58,15 @@ class stateMachine:
         if state == states.straight_turn_s:
             self.motors.setSpeeds(-250,-250)
         elif state == states.straight_turn_l:
-            self.motors.setSpeeds(150,-480)
+            self.motors.setSpeeds(0,-480)
         elif state == states.straight_turn_r:
-            self.motors.setSpeeds(-480,150)
+            self.motors.setSpeeds(-480,0)
         elif state == states.right_turn_r:
-            self.motors.setSpeeds(-480,150)
+            self.motors.setSpeeds(-480,0)
         elif state == states.right_turn_s:
             self.motors.setSpeeds(-250,-250)
         elif state == state.left_turn_l:
-            self.motors.setSpeeds(150,-480)
+            self.motors.setSpeeds(0,-480)
         elif state == state.left_turn_s:
             self.motors.setSpeeds(-250,-250)
 

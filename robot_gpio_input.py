@@ -34,7 +34,7 @@ wpi.pinMode(prox_sensor, wpi.INPUT)
 while wpi.digitalRead(start_button) == 1:
     print('wait to start')
 
-#sm.get_rolling(.1)
+#sm.get_rolling(.25)
 # capture frames from the camera
 try:
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):

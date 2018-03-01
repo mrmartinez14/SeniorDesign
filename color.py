@@ -43,4 +43,4 @@ def get_position(mask):
         return pos/len(c)
 
     else:
-        return WIDTH / 2
+        return 660
