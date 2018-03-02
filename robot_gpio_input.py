@@ -1,15 +1,14 @@
 from picamera.array import PiRGBArray
 from picamera import PiCamera
-import cv2
 import numpy as np
 import time
 import wiringpi as wpi
-import color
+from color import colors, WIDTH, HEIGHT
 from state_machine import stateMachine
 
 # initialize the camera and grab a reference to the raw camera capture
-width = color.WIDTH
-height = color.HEIGHT
+width = WIDTH
+height = HEIGHT
 camera = PiCamera()
 camera.resolution = (width, height)
 camera.framerate = 32
@@ -30,50 +29,45 @@ wpi.wiringPiSetupGpio()
 wpi.pinMode(start_button, wpi.INPUT)
 wpi.pinMode(prox_sensor, wpi.INPUT)
 
+cam = colors()
+
+def we_found_it():
+    print 'yo'
+    sm.do_the_turn()
+
+#wpi.wiringPiISR(prox_sensor, 2, we_found_it)
+
 # Wait for start button
-while wpi.digitalRead(start_button) == 1:
+while wpi.digitalRead(start_button) == 0:
     print('wait to start')
 
-#sm.get_rolling(.25)
+sm.get_rolling(.75)
 # capture frames from the camera
 try:
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-        if wpi.digitalRead(start_button) == 1:
+        if wpi.digitalRead(start_button) == 0:
             raise KeyboardInterrupt
+        if wpi.digitalRead(prox_sensor) == 0:
+            we_found_it()
 
         # grab the raw NumPy array representing the image, then initialize the timestamp
         # and occupied/unoccupied text
         image = frame.array
 
-        mask = color.get_mask(state, image)
+        if wpi.digitalRead(prox_sensor) == 0:
+            we_found_it()
 
-        xCoord = color.get_position(mask)
+        mask = cam.get_mask(state, image, sm)
+        if wpi.digitalRead(prox_sensor) == 0:
+            we_found_it()
+
+
+        xCoord = cam.get_position(mask, sm)
         sm.set_motors(sm.get_next_state(xCoord))
         print(xCoord)
 
- #       if wpi.digitalRead(prox_sensor) == 0 and reset == True:
- #           if state == 'h':
- #               state = 'c'
- #               reset = False
- #           elif state == 'c':
- #               if count == 0:
- #                   count = 1
- #                   reset = False
- #               elif count == 1:
- #                   count = 2
- #                   state = 'b'
- #                   reset = false
- #               elif count == 2:
- #                   count = 3
- #                   reset = False
- #               elif count == 3:
- #                   state = 'f'
- #                   reset = False
- #       elif wpi.digitalRead(prox_sensor) == 0 and reset = False:
-            #do motor stuff to turn
- #       elif wpi.digitalRead(prox_sensor) == 1 and reset = False:
-            #do motor stuff to go straight
-#            reset = True
+        if wpi.digitalRead(prox_sensor) == 0:
+            we_found_it()
 
         xCoord = 0
         rawCapture.truncate(0)
