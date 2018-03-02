@@ -32,12 +32,12 @@ reset = True
 
 
 def get_frame():
-    for i, frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-        if i == 1:
-            return frame.array
+    for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+#        if i == 0:
+         return frame.array
 
 def get_mask(img):
-    return cam.get_mask(state,image)
+    return cam.get_mask(state,img)
 
 def get_position(mask):
     return cam.get_position(mask)

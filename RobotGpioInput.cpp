@@ -17,7 +17,7 @@ int main(){
 	printf("here\n");
 	PyObject *pStateMachine, *pSMModule, *pStart;
 	PyObject *pGetRolling, *pKillMotors, *pSetMotors;
-        PyObject *pDoTheTurn;
+        PyObject *pDoTheTurn, *pGetNextState;
 	PyObject *pPyFuncName, *pPyFunc, *pStartCamera, *pGetFrame, *pGetMask, *pGetPosition, *pCleanUp;
 	PyObject *pArr, *pMask, *pXCoord, *pState;
 	printf("next\n");
@@ -41,7 +41,9 @@ int main(){
 		pGetMask = PyObject_GetAttrString(pPyFunc, "get_mask");
 		pCleanUp = PyObject_GetAttrString(pPyFunc, "clean_up");
 		pSetMotors = PyObject_GetAttrString(pSMModule, "set_motors");
-                if(pSetMotors && PyCallable_Check(pSetMotors)){
+		pGetNextState = PyObject_GetAttrString(pSMModule, "get_next_state");
+		pGetPosition = PyObject_GetAttrString(pPyFunc, "get_position");
+                if(pGetPosition && PyCallable_Check(pGetPosition)){
 			printf("I don't know what to do \n");
 //			return 0;
 		}else return 0;
@@ -50,15 +52,28 @@ int main(){
 		pKillMotors = PyObject_GetAttrString(pSMModule, "kill_motors");
 		pDoTheTurn = PyObject_GetAttrString(pSMModule, "do_the_turn");
 		if(pStart && PyCallable_Check(pStart)){
+			if(PyObject_CallFunction(pStartCamera, NULL) == NULL){
+				printf("oops");
+				return 0;
+			}
+			pState = PyObject_CallFunction(pStart, NULL);
 			while(digitalRead(21) == 0){;}
 			while(digitalRead(21) == 1){
 				roll = 1;
-				pState = PyObject_CallFunction(pStart, NULL);
-				PyObject_CallFunction(pSetMotors, pState, NULL);
-				while(roll){;}
-				PyObject_CallFunction(pDoTheTurn, NULL);
-				roll = 1;
-				while(roll){;}
+				pArr = PyObject_CallFunction(pGetFrame, NULL);
+				pMask = PyObject_CallFunctionObjArgs(pGetMask, pArr, NULL);
+				if(pMask == NULL){
+					printf("pState null\n");
+					return 0;
+				}//else printf("notNULL\n");
+				pXCoord = PyObject_CallFunctionObjArgs(pGetPosition, pMask, NULL);
+				pState = PyObject_CallFunctionObjArgs(pGetNextState, pXCoord, NULL);
+				PyObject_CallFunctionObjArgs(pSetMotors, pState, NULL);
+				PyObject_CallFunction(pCleanUp, NULL);
+				//while(roll){;}
+				//PyObject_CallFunction(pDoTheTurn, NULL);
+				//roll = 1;
+				//while(roll){;}
 			}
 			PyObject_CallFunction(pKillMotors,NULL);
 		}
