@@ -32,7 +32,7 @@ wpi.pinMode(prox_sensor, wpi.INPUT)
 cam = colors()
 
 def we_found_it():
-    print 'yo'
+#    print 'yo'
     sm.do_the_turn()
 
 #wpi.wiringPiISR(prox_sensor, 2, we_found_it)
@@ -41,7 +41,7 @@ def we_found_it():
 while wpi.digitalRead(start_button) == 0:
     print('wait to start')
 
-sm.get_rolling(.75)
+sm.get_rolling(.5)
 # capture frames from the camera
 try:
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
@@ -64,7 +64,7 @@ try:
 
         xCoord = cam.get_position(mask, sm)
         sm.set_motors(sm.get_next_state(xCoord))
-        print(xCoord)
+#        print(xCoord)
 
         if wpi.digitalRead(prox_sensor) == 0:
             we_found_it()

@@ -23,13 +23,10 @@ class colors:
     def __init__(self):
         self.count = 0
         self.last = 's'
-        wpi.wiringPiSetupGpio()
 
 
-    def get_mask(self, state, img, stm):
+    def get_mask(self, state, img):
         img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-        if wpi.digitalRead(26) == 0:
-            stm.do_the_turn()
         if state == 'h':
             mask = cv2.inRange(img, lower_green, upper_green)
         elif state == 'c':
@@ -38,35 +35,19 @@ class colors:
             mask = cv2.inRange(img, lower_blue, upper_blue)
         elif state == 'f':
             mask = cv2.inRange(img, lower_red, upper_red)
-        if wpi.digitalRead(26) == 0:
-            stm.do_the_turn()
-        mask = cv2.erode(mask, None, iterations=1)
-        if wpi.digitalRead(26) == 0:
-            stm.do_the_turn()
-        mask = cv2.erode(mask, None, iterations=1)
-        if wpi.digitalRead(26) == 0:
-            stm.do_the_turn()
-        mask = cv2.dilate(mask, None, iterations=1)
-        if wpi.digitalRead(26) == 0:
-            stm.do_the_turn()
-        mask = cv2.dilate(mask, None, iterations=1)
-        if wpi.digitalRead(26) == 0:
-            stm.do_the_turn()
+        mask = cv2.erode(mask, None, iterations=2)
+        mask = cv2.dilate(mask, None, iterations=2)
         return mask
 
 
-    def get_position(self, mask, stm):
+    def get_position(self, mask):
         pos = 0
         cnts = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]
-        if wpi.digitalRead(26) == 0:
-            stm.do_the_turn()
 
         if len(cnts) > 0:
             c = max(cnts, key=cv2.contourArea)
             for i in c.tolist():
                 pos = pos + i[0][0]
-            if wpi.digitalRead(26) == 0:
-                stm.do_the_turn()
 
             pos = pos/len(c)
             if pos < 614:

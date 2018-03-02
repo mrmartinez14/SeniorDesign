@@ -16,6 +16,7 @@ class stateMachine:
 
 
     def __init__(self):
+        self.m1 = 0
         self.motors = motors
         self.current_state = states.straight_turn_s
         self.motors.setSpeeds(0,0)
@@ -34,16 +35,22 @@ class stateMachine:
 
     def set_motors(self, state):
         if state == states.straight_turn_s:
+            self.m1=-200
             self.motors.setSpeeds(-200,-200)
         elif state == states.straight_turn_l:
             self.motors.setSpeeds(0,-480)
         elif state == states.straight_turn_r:
             self.motors.setSpeeds(-480,0)
         elif state == states.right_turn_r:
-            self.motors.setSpeeds(-480,150)
+            self.m1=-200
+            self.motors.setSpeeds(-200,0)
         elif state == states.right_turn_s:
             self.motors.setSpeeds(-200,-200)
         elif state == states.left_turn_l:
+            if self.m1 <0:
+                self.motors.setSpeeds(480,-480)
+                time.sleep(.05)
+                self.m1 = 480
             self.motors.setSpeeds(0,-480)
         elif state == states.left_turn_s:
             self.motors.setSpeeds(-200,-200)
@@ -57,9 +64,9 @@ class stateMachine:
         return
 
     def get_next_state(self, coord):
-        if coord <= 750:
+        if coord <= 700:
             return states.right_turn_r
-        elif coord > 750 and coord <= 1024:
+        elif coord > 700 and coord <= 1024:
             return states.straight_turn_s
-        elif coord > 1500:
+        elif coord >1024:
             return states.left_turn_l
