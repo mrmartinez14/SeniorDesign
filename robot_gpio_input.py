@@ -38,36 +38,36 @@ def we_found_it():
 #wpi.wiringPiISR(prox_sensor, 2, we_found_it)
 
 # Wait for start button
-while wpi.digitalRead(start_button) == 0:
-    print('wait to start')
+#while wpi.digitalRead(start_button) == 0:
+#    print('wait to start')
 
-sm.get_rolling(.5)
+#sm.get_rolling(.5)
 # capture frames from the camera
 try:
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-        if wpi.digitalRead(start_button) == 0:
-            raise KeyboardInterrupt
-        if wpi.digitalRead(prox_sensor) == 0:
-            we_found_it()
+#        if wpi.digitalRead(start_button) == 0:
+#            raise KeyboardInterrupt
+#        if wpi.digitalRead(prox_sensor) == 0:
+#            we_found_it()
 
         # grab the raw NumPy array representing the image, then initialize the timestamp
         # and occupied/unoccupied text
         image = frame.array
 
-        if wpi.digitalRead(prox_sensor) == 0:
-            we_found_it()
+#        if wpi.digitalRead(prox_sensor) == 0:
+#            we_found_it()
 
         mask = cam.get_mask(state, image, sm)
-        if wpi.digitalRead(prox_sensor) == 0:
-            we_found_it()
+#        if wpi.digitalRead(prox_sensor) == 0:
+#            we_found_it()
 
 
         xCoord = cam.get_position(mask, sm)
-        sm.set_motors(sm.get_next_state(xCoord))
-#        print(xCoord)
+#        sm.set_motors(sm.get_next_state(xCoord))
+        print(xCoord)
 
-        if wpi.digitalRead(prox_sensor) == 0:
-            we_found_it()
+#        if wpi.digitalRead(prox_sensor) == 0:
+#            we_found_it()
 
         xCoord = 0
         rawCapture.truncate(0)

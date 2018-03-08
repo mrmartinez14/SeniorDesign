@@ -19,7 +19,7 @@ def start():
     motors.setSpeeds(0,0)
     motors.enable()
     left = 'y'
-    return states.straight_turn_s
+    return states.turn
 
 def do_the_turn():
     motors.setSpeeds(480,-480)
@@ -38,13 +38,15 @@ def set_motors(state):
     elif state == states.straight_turn_r:
         motors.setSpeeds(-480,0)
     elif state == states.right_turn_r:
-        motors.setSpeeds(-480,150)
+        motors.setSpeeds(-280,0)
     elif state == states.right_turn_s:
         motors.setSpeeds(-200,-200)
     elif state == states.left_turn_l:
-        motors.setSpeeds(0,-480)
+        motors.setSpeeds(0,-380)
     elif state == states.left_turn_s:
         motors.setSpeeds(-200,-200)
+    elif state == state.turn:
+        motors.setSpeeds(0,0)
 
 def reset_motors():
     motors.enable()

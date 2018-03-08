@@ -1,6 +1,5 @@
 import numpy as np
 import cv2
-import wiringpi as wpi
 
 # Camera resolution
 WIDTH = 1024
@@ -50,27 +49,29 @@ class colors:
                 pos = pos + i[0][0]
 
             pos = pos/len(c)
-            if pos < 614:
-                self.last = 'r'
-            elif pos >= 614 and pos < 820:
-                self.last = 's'
-            elif pos >= 820:
-                self.last = 'l'
+            print pos
+#            if pos < 614:
+#                self.last = 'r'
+#            elif pos >= 614 and pos < 820:
+#                self.last = 's'
+#            elif pos >= 820:
+#                self.last = 'l'
             return pos
-        else:
-            if self.last == 'r':
-                return 300
-            elif self.last == 's':
-                return 800
-            elif self.last == 'l':
-                self.last = 'll'
-                return 1100
-            elif self.last == 'll':
-                if self.count < 1:
-                    self.count = self.count + 1
-                    return 1600
-                else:
-                    self.last = 'lll'
-                    return 1600
-            elif self.last == 'lll':
-                return 1600
+#        else:
+#            return 1100
+#            if self.last == 'r':
+#                return 300
+#            elif self.last == 's':
+#                return 800
+#            elif self.last == 'l':
+#                self.last = 'll'
+#                return 1100
+#            elif self.last == 'll':
+#                if self.count < 1:
+#                    self.count = self.count + 1
+#                    return 1600
+#                else:
+#                    self.last = 'lll'
+#                    return 1600
+#            elif self.last == 'lll':
+#                return 1600
