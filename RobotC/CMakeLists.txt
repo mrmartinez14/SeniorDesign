@@ -27,11 +27,29 @@
 # Copyright 2014 Ettus Research LLC
 #
 
+# Find OpenCV, you may need to set OpenCV_DIR variable
+# to the absolute path to the directory containing OpenCVConfig.cmake file
+# via the command line or GUI
+find_package(OpenCV REQUIRED)
+
+# If the package has been found, several variables will
+# be set, you can find the full list with descriptions
+# in the OpenCVConfig.cmake file.
+# Print some message showing some of them
+message(STATUS "OpenCV library status:")
+message(STATUS "    version: ${OpenCV_VERSION}")
+message(STATUS "    libraries: ${OpenCV_LIBS}")
+message(STATUS "    include path: ${OpenCV_INCLUDE_DIRS}")
+
+if(CMAKE_VERSION VERSION_LESS "2.8.11")
+	include_directories(${OpenCV_INCLUDE_DIRS})
+endif()
+
 SET(GYRO_SRCS
-    linearTest.cpp)
+    cRobot.cpp)
 
 ADD_EXECUTABLE(GyroTest ${GYRO_SRCS})
 TARGET_LINK_LIBRARIES(GyroTest RTIMULib)
 TARGET_LINK_LIBRARIES(GyroTest wiringPi)
-
+TARGET_LINK_LIBRARIES(GyroTest ${OpenCV_LIBS})
 INSTALL(TARGETS GyroTest DESTINATION bin)
