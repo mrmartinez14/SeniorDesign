@@ -19,8 +19,8 @@ int main()
 	float tolerance = 4;
 	int DCR = 0;
 	int DCL = 0;
-	int speedR = 0;
-	int speedL = 0;
+	int speedR = 240;
+	int speedL = 150;
 	int pathcheck = 0;
 	float difference;
 	RTIMU_DATA init_data;
@@ -39,12 +39,16 @@ int main()
 	imu->setAccelEnable(true);
 	imu->setCompassEnable(true);
 
+	m->enable();
+	m->setSpeeds(150,270);
+	sleep(2);
 	for(int i = 0; i < 10; i++){
 		while(imu->IMURead()){
 			init_data = imu->getIMUData();
 		}
 	}
-	printf("Init %f\n", init_data.fusionPose.z());
+
+	printf("Init %f\n", init_data.fusionPose.z()*RTMATH_RAD_TO_DEGREE);
 	while(!flag){
 
 		usleep(imu->IMUGetPollInterval() * 1000);
@@ -53,33 +57,32 @@ int main()
 			RTIMU_DATA imuData = imu->getIMUData();
 			difference = (init_data.fusionPose.z() - imuData.fusionPose.z())* RTMATH_RAD_TO_DEGREE;
 			//difference = imuData.fusionPose.z()* RTMATH_RAD_TO_DEGREE;
-			printf("Heading = %f\r", difference);
+//			printf("Heading = %f\r", difference);
 			fflush(stdout);
 		}
-		if(abs(difference)<tolerance){
+		if(difference < tolerance && difference >  -tolerance){
 			DCR = speedR;
 			DCL = speedL;
 			pathcheck++;
-			printf("heading straight\n");
+			printf("heading %f straight\r", difference);
+			fflush(stdout);
 		}
-		else if(difference>tolerance){
+		else if(difference > tolerance){
 			DCR = speedR;
-			DCL = speedL-48;
+			DCL = speedL + 150;
 			pathcheck = 0;
-			printf("heading right\n");
+			printf("heading %f right\r", difference);
+			fflush(stdout);
 		}
-		else if(difference<-tolerance){
-			DCR = speedR-48;
+		else if(difference < -tolerance){
+			DCR = speedR + 150;
 			DCL = speedL;
 			pathcheck = 0;
-			printf("heading left\n");
+			printf("heading %f left\r", difference);
+			fflush(stdout);
 		}
-		if(pathcheck>5){
-			speedR+=24;
-			speedL+=24;
-		}
+
 		m->setSpeeds(DCL, DCR);
-		sleep(1);
 	}
 	printf("\nEnding program\n");
 	m->disable();

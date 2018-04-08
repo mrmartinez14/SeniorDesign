@@ -28,7 +28,7 @@
 #
 
 SET(GYRO_SRCS
-    gyroTest.cpp)
+    linearTest.cpp)
 
 ADD_EXECUTABLE(GyroTest ${GYRO_SRCS})
 TARGET_LINK_LIBRARIES(GyroTest RTIMULib)
