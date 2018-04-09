@@ -17,8 +17,10 @@ int main(int argc, char ** argv)
 	VideoCapture cap(0);
 	if (!cap.isOpened()){
 		cerr << "ERROR: Unable to open camera" << endl;
-		return 0;
+	return 0;
 	}
+        cap.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
+        cap.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
 	Mat frame, hsv;
 	Scalar minYellow = Scalar(20,60,60);
 	Scalar maxYellow = Scalar(25,200,200);
